@@ -1,0 +1,4 @@
+*.o
+*.d
+exefile
+data.csv

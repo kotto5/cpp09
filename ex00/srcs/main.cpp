@@ -51,6 +51,8 @@ enum eDate{
 #include <sstream>
 
 bool	validMonth(std::string month){
+	if (month.size() != 2)
+		return (false);
 	std::stringstream ss(month);
 	int i;
 	ss >> i;
@@ -59,6 +61,8 @@ bool	validMonth(std::string month){
 }
 
 bool	validYear(std::string year){
+	if (year.size() != 4)
+		return (false);
 	std::stringstream ss(year);
 	int i;
 	ss >> i;
@@ -66,47 +70,89 @@ bool	validYear(std::string year){
 		i >= 0 && i <= 9999);
 }
 
+bool	validDay(std::string day){
+	if (day.size() != 2)
+		return (false);
+	std::stringstream ss(day);
+	int i;
+	ss >> i;
+	return (ss.fail() == false && ss.eof() == true &&
+		i >= 1 && i <= 31);
+}
+
+bool	validTimeStamp(std::string timestamp, eDate kind){
+	if (kind == Year)
+		return (validYear(timestamp));
+	else if (kind == Month)
+		return (validMonth(timestamp));
+	else if (kind == Day)
+		return (validDay(timestamp));
+	return (false);
+}
+
 bool	KeyHasValidDate(std::string date){
-	size_t	countLengthDate[3] = {0};
-	size_t	itrDate = 0;
+	eDate	itrDate = Year;
 	size_t	i = 0;
 
 	while (i < date.size())
 	{
-		if (itrDate > 2)
-			return (false);
-		else if (date[i] == '-')
+		if (date[i] == '-')
 		{
-			if ((itrDate == Month && validMonth(date.substr(0, i)) == false) ||
-				(itrDate == Year && validYear(date.substr(0, i)) == false))
+			if (validTimeStamp(date.substr(0, i), itrDate) == false)
 				return (false);
-			std::cout << "date : " << date << std::endl;
 			date = date.substr(i + 1);
 			i = 0;
-			itrDate++;
+			itrDate = (eDate)(itrDate + 1);
 			continue ;
 		}
-		else if (std::isdigit(date[i]))
-			countLengthDate[itrDate]++;
-		else
+		else if (!std::isdigit(date[i]))
 			return (false);
 		i++;
 	}
-	std::cout << "date Foo : " << date << std::endl;
-	if (date.find_first_not_of('0') >= i)
+	if (validTimeStamp(date, itrDate) == false)
 		return (false);
-	std::cout << countLengthDate[0] << " " << countLengthDate[1] << " " << countLengthDate[2] << std::endl;
-	return (countLengthDate[0] == 4 && countLengthDate[1] == 2 && countLengthDate[2] == 2);
+	return (true);
 }
 
 bool    isDouble(const std::string &str)
 {
-    // if (str == "nan" || str == "+inf" || str == "-inf")
-    //     return (true);
     std::stringstream ss(str);
     double d;
     ss >> d;
     return  (ss.fail() == false && ss.eof() == true);
+}
+
+bool	lineToMap(const std::string &line, std::map<std::string, double> &data){
+	if (invalidCsvLine(line))
+	{
+		std::cout << "Invalid csv line" << std::endl;
+		return (false);
+	}
+	std::string key = line.substr(0, line.find(CSV_DELIMITER));
+	std::string value = line.substr(line.find(CSV_DELIMITER) + 1);
+	if (KeyHasValidDate(key) == false || isDouble(value) == false ||
+		data.find(key) != data.end())
+	{
+		std::cout << "Invalid csv line" << std::endl;
+		return (false);
+	}
+	std::stringstream ss(value);
+	ss >> data[key];
+	return (true);
+}
+
+bool	dataBaseToMap(std::map<std::string, double> &data){
+	std::fstream file("data.csv");
+	if (!file.is_open()){
+		std::cout << "this program need data.csv DataBase" << std::endl;
+		return (false);
+	}
+	std::string line;
+	std::getline(file, line);
+	while (std::getline(file, line))
+		if (lineToMap(line, data) == false)
+			return (false);
+	return (true);
 }
 
 int	main(int argc, char **argv){
@@ -115,51 +161,8 @@ int	main(int argc, char **argv){
 		return (1);
 	}
 	(void)argv;
-	std::fstream file("data.csv");
-	if (!file.is_open()){
-		std::cout << "this program need data.csv DataBase" << std::endl;
+	std::map<std::string, double> data;
+	if (dataBaseToMap(data) == false)
 		return (1);
-	}
-	std::string line;
-	std::map<std::string, std::string> data;
-	std::getline(file, line);
-	while (std::getline(file, line)){
-		if (invalidCsvLine(line))
-		{
-			std::cout << "Invalid csv line" << std::endl;
-			return (1);
-		}
-		std::string key = line.substr(0, line.find(CSV_DELIMITER));
-		if (KeyHasValidDate(key) == false)
-		{
-			std::cout << "Invalid csv line : [" << key << "]" << std::endl;
-			return (1);
-		}
-		if (data.find(key) != data.end())
-		{
-			std::cout << "Duplicate key : [" << key << "]" << std::endl;
-			return (1);
-		}
-		std::string value = line.substr(line.find(CSV_DELIMITER) + 1);
-		if (isDouble(value) == false)
-		{
-			std::cout << "Invalid csv line : [" << value << "]" << std::endl;
-			return (1);
-		}
-		data[key] = value;
-	}
-	// for_each(data.begin(), data.end(),
-	// 	DateFormat(countLengthDate[0], countLengthDate[1], countLengthDate[2]));
-
-	// std::map<std::string, std::string> formatedData = format(data);
-	// if (countLengthDate[0] < YearLength(key))
-	// 	countLengthDate[0] = YearLength(key);
-	// if (countLengthDate[1] < MonthLength(key))
-	// 	countLengthDate[1] = MonthLength(key);
-	// if (countLengthDate[2] < DayLength(key))
-	// 	countLengthDate[2] = DayLength(key);
-
-
-	std::cout << "=============" << std::endl;
 	return 0;
 }

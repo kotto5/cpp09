@@ -157,6 +157,35 @@ bool	dataBaseToMap(std::map<std::string, double> &data){
 	return (true);
 }
 
+double	getNearestLowerValue(std::map<std::string, double> &data, std::string date){
+	if (KeyHasValidDate(date) == false)
+	{
+		std::cout << "Invalid date" << std::endl;
+		return (-1);
+	}
+	std::map<std::string, double>::iterator itr = data.lower_bound(date);
+	if (itr->first == date)
+		return (itr->second);
+	else if (itr == data.begin())
+		return (-1);
+	else
+	{
+		itr--;
+		return (itr->second);
+	}
+}
+
+bool	outputValue(std::map<std::string, double> &data, std::string date){
+	double value = getNearestLowerValue(data, date);
+	if (value == -1)
+	{
+		std::cout << "Invalid date" << std::endl;
+		return (false);
+	}
+	std::cout << value << std::endl;
+	return (true);
+}
+
 int	main(int argc, char **argv){
 	if (argc != 2){
 		std::cout << "Wrong number of arguments" << std::endl;
@@ -164,7 +193,8 @@ int	main(int argc, char **argv){
 	}
 	(void)argv;
 	std::map<std::string, double> data;
-	if (dataBaseToMap(data) == false)
+	if (dataBaseToMap(data) == false || 
+		outputValue(data, argv[1]) == false)
 		return (1);
 	return 0;
 }

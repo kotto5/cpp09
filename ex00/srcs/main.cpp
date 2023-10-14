@@ -149,6 +149,8 @@ bool	dataBaseToMap(std::map<std::string, double> &data){
 	}
 	std::string line;
 	std::getline(file, line);
+	if (invalidCsvLine(line))
+		return (false);
 	while (std::getline(file, line))
 		if (lineToMap(line, data) == false)
 			return (false);

@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/kakiba/Desktop/42/cpp09/ex00/srcs",
-      "program": "/home/kakiba/Desktop/42/cpp09/ex00/srcs/build/Debug/outDebug",
+      "cwd": "/home/kakiba/Desktop/42/cpp09/ex01/srcs",
+      "program": "/home/kakiba/Desktop/42/cpp09/ex01/srcs/build/Debug/outDebug",
       "MIMode": "lldb",
       "miDebuggerPath": "lldb",
       "setupCommands": [

@@ -2,3 +2,6 @@
 *.d
 exefile
 data.csv
+.vscode/*
+*.json
+*.txt

@@ -4,8 +4,9 @@
 #include <exception>
 #include <sstream>
 #include <stack>
+#include <queue>
 
-int	stod(std::string s) {
+int	stod_util(const std::string &s) {
 	std::stringstream ss(s);
 	int	i = 0;
 	ss >> i;
@@ -28,22 +29,50 @@ int	calculate(int front, int back, char ope) {
 	return 0;
 }
 
-int	main(int argc, char **argv) {
-	std::stack<int> stack;
+bool	tokenize(const std::string& str, std::queue<std::string> &tokens) {
+    std::string token;
+    std::istringstream tokenStream(str);
+    while (std::getline(tokenStream, token, ' ')) {
+		if (token.size() != 1 || 
+			(!isoperator(token[0])&& !std::isdigit(token[0])))
+			return (false);
+		else
+			tokens.push(token);
+    }
+	return (true);
+}
+
+int evaluateRPN(std::queue<std::string>& tokens) {
 	int				front;
 	int				back;
 
-	for (int i = 0; i < argc; i++) {
-		if (std::isdigit(argv[i][0]))
-			stack.push(stod(argv[i]));
-		else if (isoperator(argv[i][0]))
+    std::stack<int> stack;
+	std::string token;
+    while (tokens.size()) {
+		token = tokens.front();
+		if (std::isdigit(token[0]))
+			stack.push(stod_util(token));
+		else if (isoperator(token[0]))
 		{
 			back = stack.top();
 			stack.pop();
 			front = stack.top();
 			stack.pop();
-			stack.push(calculate(front, back, argv[i][0]));
+			stack.push(calculate(front, back, token[0]));
 		}
+		tokens.pop();
+    }
+    return stack.top();
+}
+
+int	main(int argc, char **argv) {
+	std::queue<std::string>	tokens;
+
+	if (argc != 2 || !tokenize(argv[1], tokens))
+	{
+		std::cout << "ERROR" << std::endl;
+		return 1;
 	}
-	std::cout << stack.top() << std::endl;
+	std::cout << evaluateRPN(tokens) << std::endl;
+	return 0;
 }

@@ -149,7 +149,7 @@ bool	dataBaseToMap(std::map<std::string, double> &data){
 	}
 	std::string line;
 	std::getline(file, line);
-	if (invalidCsvLine(line))
+	if (invalidCsvLi43ne(line))
 		return (false);
 	while (std::getline(file, line))
 		if (lineToMap(line, data) == false)
@@ -175,14 +175,30 @@ double	getNearestLowerValue(std::map<std::string, double> &data, std::string dat
 	}
 }
 
-bool	outputValue(std::map<std::string, double> &data, std::string date){
-	double value = getNearestLowerValue(data, date);
-	if (value == -1)
-	{
-		std::cout << "Invalid date" << std::endl;
+#include <fstream>
+
+bool	outputValue(std::map<std::string, double> &data, std::string fileName){
+	std::fstream file(fileName);
+	if (!file.is_open()){
+		perror(fileName.c_str());
 		return (false);
 	}
-	std::cout << value << std::endl;
+	std::string line;
+	std::getline(file, line);
+	if (invalidCsvLine(line))
+		return (false);
+	while (std::getline(file, line))
+	{
+		std::string date = 
+		double	numOfBitCoin = 
+		double value = getNearestLowerValue(data, date);
+		if (value == -1)
+		{
+			std::cout << "Invalid date" << std::endl;
+			return (false);
+		}
+		std::cout << value << std::endl;
+	}
 	return (true);
 }
 

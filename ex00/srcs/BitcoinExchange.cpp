@@ -147,21 +147,14 @@ static double	getNearestLowerValue(std::map<std::string, double> &data, std::str
 	}
 }
 
-int	BitcoinExchange::Exchange(const std::string &fileName){
-	std::map<std::string, double> bitcoinRate;
-	if (getRateFromDB(bitcoinRate) == false)
-		return (1);
-
-	std::cout << "Enter date and value" << std::endl;
+static bool	outputExchangeValue(std::map<std::string, double> &bitcoinRate, const std::string &fileName){
 	std::ifstream file(fileName.c_str());
-	std::cout << "Enter date and value2" << std::endl;
+	if (!file.is_open()) {
+		std::cout << "Error: cannot open file " << fileName << std::endl;
+		return false;
+	}
 
-	// if (!file.is_open()) {
-	// 	std::cerr << "Error: cannot open file " << fileName << std::endl;
-	// 	return (1);
-	// }
     std::string line;
-
     while (std::getline(file, line)) {
         std::istringstream line_ss(line);
         std::string date, delimiter, value_str;
@@ -173,12 +166,12 @@ int	BitcoinExchange::Exchange(const std::string &fileName){
         }
         
         if (!KeyHasValidDate(date)) {
-            std::cerr << "Invalid date format: " << date << std::endl;
+            std::cout << "Invalid date format: " << date << std::endl;
             continue;
         }
         float value;
         if (!isDouble(value_str)) {
-            std::cerr << "Invalid value: " << value_str << std::endl;
+            std::cout << "Invalid value: " << value_str << std::endl;
             continue;
         }
 		std::stringstream ss(value_str);
@@ -201,4 +194,11 @@ int	BitcoinExchange::Exchange(const std::string &fileName){
 		std::cout << date << " => " << value_str << " = " << valueFromMap * value << std::endl;
     }
 	return true;
+}
+
+bool	BitcoinExchange::Exchange(const std::string &fileName){
+	std::map<std::string, double> bitcoinRate;
+
+	return (getRateFromDB(bitcoinRate) && 
+		outputExchangeValue(bitcoinRate, fileName));
 }

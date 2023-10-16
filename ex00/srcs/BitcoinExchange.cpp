@@ -196,7 +196,13 @@ static bool	outputExchangeValue(std::map<std::string, double> &bitcoinRate, cons
 	return true;
 }
 
-bool	BitcoinExchange::Exchange(const std::string &fileName){
+bool	BitcoinExchange::Exchange(const char *fileName){
+	if (fileName == NULL)
+	{
+		std::cout << "Error: cannot open file." << std::endl;
+		return false;
+	}
+
 	std::map<std::string, double> bitcoinRate;
 
 	return (getRateFromDB(bitcoinRate) && 

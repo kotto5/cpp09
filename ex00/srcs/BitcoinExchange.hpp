@@ -11,7 +11,7 @@ private:
 	BitcoinExchange &operator=(const BitcoinExchange &other);
 	~BitcoinExchange();
 public:
-	static bool Exchange(const std::string &filename);
+	static bool Exchange(const char *filename);
 };
 
 #endif

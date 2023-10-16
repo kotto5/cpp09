@@ -149,7 +149,7 @@ bool	dataBaseToMap(std::map<std::string, double> &data){
 	}
 	std::string line;
 	std::getline(file, line);
-	if (invalidCsvLi43ne(line))
+	if (invalidCsvLine(line))
 		return (false);
 	while (std::getline(file, line))
 		if (lineToMap(line, data) == false)
@@ -177,29 +177,50 @@ double	getNearestLowerValue(std::map<std::string, double> &data, std::string dat
 
 #include <fstream>
 
-bool	outputValue(std::map<std::string, double> &data, std::string fileName){
-	std::fstream file(fileName);
-	if (!file.is_open()){
-		perror(fileName.c_str());
-		return (false);
-	}
-	std::string line;
-	std::getline(file, line);
-	if (invalidCsvLine(line))
-		return (false);
-	while (std::getline(file, line))
-	{
-		std::string date = 
-		double	numOfBitCoin = 
-		double value = getNearestLowerValue(data, date);
-		if (value == -1)
+bool	outputValue(std::map<std::string, double> &data, const std::string &fileName){
+	std::ifstream file(fileName.c_str());
+    std::string line;
+
+    while (std::getline(file, line)) {
+        std::istringstream line_ss(line);
+        std::string date, delimiter, value_str;
+        line_ss >> date >> delimiter >> value_str;
+        
+        if (delimiter != "|") {
+			std::cout << "bad input => " << line << std::endl;
+            continue;
+        }
+        
+        if (!KeyHasValidDate(date)) {
+            std::cerr << "Invalid date format: " << date << std::endl;
+            continue;
+        }
+        
+        float value;
+        if (!isDouble(value_str)) {
+            std::cerr << "Invalid value: " << value_str << std::endl;
+            continue;
+        }
+		std::stringstream ss(value_str);
+		ss >> value;
+		if (value < 0) {
+			std::cout << "Error: not a positive number. => " << value_str << std::endl;
+            continue;
+		}
+		if (value > 1000) {
+			std::cout << "Error: too large a number => " << value_str << std::endl;
+            continue;
+		}
+
+		double valueFromMap = getNearestLowerValue(data, date);
+		if (valueFromMap < 0)
 		{
 			std::cout << "Invalid date" << std::endl;
 			return (false);
 		}
-		std::cout << value << std::endl;
-	}
-	return (true);
+		std::cout << date << " => " << value_str << " = " << valueFromMap * value << std::endl;
+    }
+	return true;
 }
 
 int	main(int argc, char **argv){
@@ -214,3 +235,29 @@ int	main(int argc, char **argv){
 		return (1);
 	return 0;
 }
+
+
+
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <ctime>
+
+// struct Entry {
+//     std::string date;
+//     float value;
+// };
+
+// bool isValidDate(const std::string& date) {
+//     std::istringstream ss(date);
+//     struct tm tm;
+//     char buf[255];
+
+//     ss >> std::get_time(&tm, "%Y-%m-%d");
+//     if (ss.fail()) {
+//         return false;
+//     }
+//     std::strftime(buf, sizeof(buf), "%Y-%m-%d", &tm);
+//     return date == buf;
+// }

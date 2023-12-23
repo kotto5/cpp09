@@ -3,22 +3,11 @@
   "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
-      "type": "cppdbg",
+      "type": "lldb",
       "request": "launch",
       "args": [],
-      "stopAtEntry": false,
-      "externalConsole": false,
-      "cwd": "/home/kakiba/Desktop/42/cpp09/ex01/srcs",
-      "program": "/home/kakiba/Desktop/42/cpp09/ex01/srcs/build/Debug/outDebug",
-      "MIMode": "lldb",
-      "miDebuggerPath": "lldb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ]
+      "cwd": "/Users/kakiba/Develop/cpp09/ex01/srcs",
+      "program": "/Users/kakiba/Develop/cpp09/ex01/srcs/build/Debug/outDebug"
     }
   ]
 }

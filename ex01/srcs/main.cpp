@@ -32,9 +32,11 @@ int	tester(std::string str, bool success, int expect = 0) {
 
 	Result<int> result = RPN::evaluate(str);
 	if (result.isOk() != success || (!success && result.getResult() != ERROR))
-		return putResult(false, result);
+		putResult(false, result);
 	else
-		return putResult(true, result);
+		putResult(true, result);
+	std::cout << "========================================" << std::endl;
+	return 0;
 }
 
 
@@ -44,6 +46,8 @@ int	main(int argc, char **argv) {
 	tester("+ +", false);
 	tester("+ +", true, 0);
 	tester("1 + +", false, 0);
+	tester("1 0 /", false, 0);
+	tester("0 1 /", true, 0);
 	if (argc == 1)
 	{
 		std::cout << "ERROR" << std::endl;

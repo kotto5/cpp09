@@ -11,7 +11,7 @@ int	isOperator(char c) {
 	return (c == '+' || c == '-' || c == '*' || c == '/');
 }
 
-int	calculate(int front, int back, char ope) {
+Result<int>	calculate(int front, int back, char ope) {
 	if (ope == '+')
 		return (front + back);
 	else if (ope == '-')
@@ -21,7 +21,7 @@ int	calculate(int front, int back, char ope) {
 	else if (ope == '/')
 	{
 		if (back == 0)
-			throw std::exception();
+			return false;
 		return (front / back);
 	}
 	return 0;
@@ -70,7 +70,10 @@ Result<int> evaluateRPN(std::queue<std::string> tokens) {
 			stack.pop();
 			front = stack.top();
 			stack.pop();
-			stack.push(calculate(front, back, token[0]));
+			Result<int> result = calculate(front, back, token[0]);
+			if (!result.isOk())
+				return Result<int>(false, ERROR);
+			stack.push(result.getResult());
 		}
 		tokens.pop();
     }

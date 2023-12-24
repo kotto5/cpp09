@@ -44,10 +44,12 @@ int	main(int argc, char **argv) {
 	tester("1 2 +", true, 3);
 	tester("2 2 +", true, 4);
 	tester("+ +", false);
-	tester("+ +", true, 0);
-	tester("1 + +", false, 0);
-	tester("1 0 /", false, 0);
+	tester("1 + +", false);
 	tester("0 1 /", true, 0);
+	tester("1 0 /", false, 0);
+	tester("1 1 1 - /", false);
+	tester("1 1 1 - *", true, 0);
+	tester("10 1 1 - *", false, 0);
 	if (argc == 1)
 	{
 		std::cout << "ERROR" << std::endl;

@@ -36,6 +36,11 @@ private:
     RPN(const RPN &other);
     RPN &operator=(const RPN &other);
     ~RPN();
+	static int								atoi(const std::string &s);
+	static int								isOperator(char c);
+	static Result<int>						calculate(int front, int back, char ope);
+	static Result<std::queue<std::string> >	tokenize(const std::string& str);
+	static Result<int>						evaluateRPN(std::queue<std::string> tokens);
 public:
     static Result<int>	evaluate(std::string str);
 };

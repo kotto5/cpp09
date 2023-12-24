@@ -1,16 +1,17 @@
 #include "RPN.hpp"
 
-int	atoi(const std::string &s) {
+int	RPN::atoi(const std::string &s) {
 	std::stringstream ss(s);
 	int	i = 0;
 	ss >> i;
 	return (i);
 }
 
-int	isOperator(char c) {
+int	RPN::isOperator(char c) {
 	return (c == '+' || c == '-' || c == '*' || c == '/');
 }
-Result<int>	calculate(int front, int back, char ope) {
+
+Result<int>	RPN::calculate(int front, int back, char ope) {
 	int ret = 0;
 	if (ope == '+')
 		ret = front + back;
@@ -27,7 +28,7 @@ Result<int>	calculate(int front, int back, char ope) {
 	return Result<int>(true, ret);
 }
 
-Result<std::queue<std::string> >	tokenize(const std::string& str) {
+Result<std::queue<std::string> >	RPN::tokenize(const std::string& str) {
     std::queue<std::string> tokens;
     std::string			    token;
     std::istringstream	    tokenStream(str);
@@ -54,7 +55,7 @@ Result<std::queue<std::string> >	tokenize(const std::string& str) {
 	return Result<std::queue<std::string> >(true, tokens);
 }
 
-Result<int> evaluateRPN(std::queue<std::string> tokens) {
+Result<int> RPN::evaluateRPN(std::queue<std::string> tokens) {
 	int				front;
 	int				back;
 

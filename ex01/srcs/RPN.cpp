@@ -1,13 +1,13 @@
 #include "RPN.hpp"
 
-int	stod_util(const std::string &s) {
+int	atoi(const std::string &s) {
 	std::stringstream ss(s);
 	int	i = 0;
 	ss >> i;
 	return (i);
 }
 
-int	isoperator(char c) {
+int	isOperator(char c) {
 	return (c == '+' || c == '-' || c == '*' || c == '/');
 }
 
@@ -54,7 +54,6 @@ Result<std::queue<std::string> >	tokenize(const std::string& str) {
 	return Result<std::queue<std::string> >(true, tokens);
 }
 
-// int evaluateRPN(const std::queue<std::string>& tokens) {
 Result<int> evaluateRPN(std::queue<std::string> tokens) {
 	int				front;
 	int				back;
@@ -64,8 +63,8 @@ Result<int> evaluateRPN(std::queue<std::string> tokens) {
     while (tokens.size()) {
 		token = tokens.front();
 		if (std::isdigit(token[0]))
-			stack.push(stod_util(token));
-		else if (isoperator(token[0]))
+			stack.push(atoi(token));
+		else if (isOperator(token[0]))
 		{
 			back = stack.top();
 			stack.pop();
@@ -83,7 +82,6 @@ Result<int> RPN::evaluate(std::string str) {
     if (!tokens.isOk())
     {
         std::cout << "TOKENIZE ERROR" << std::endl;
-        // return Result(false, ERROR);
         return Result<int>(false, ERROR);
     }
 

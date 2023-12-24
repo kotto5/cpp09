@@ -31,27 +31,25 @@ Result<std::queue<std::string> >	tokenize(const std::string& str) {
     std::queue<std::string> tokens;
     std::string			    token;
     std::istringstream	    tokenStream(str);
-	int					    acceptableOperator = -1;
+	int						numOfNumberStackContain = 0;
 
     while (std::getline(tokenStream, token, ' ')) {
 		if (token.size() != 1)
 			return false;
-		else if (isoperator(token[0]))
+		else if (isOperator(token[0]))
 		{
-			if (acceptableOperator < 1)
+			if (numOfNumberStackContain < 2)
 				return false;
-			acceptableOperator--;
-			tokens.push(token);
+			else
+				numOfNumberStackContain--;
 		}
 		else if (std::isdigit(token[0]))
-		{
-			acceptableOperator++;
-			tokens.push(token);
-		}
+			numOfNumberStackContain++;
 		else
 			return Result<std::queue<std::string> >(false);
+		tokens.push(token);
     }
-	if (acceptableOperator != 0)
+	if (numOfNumberStackContain != 1)
 		return Result<std::queue<std::string> >(false);
 	return Result<std::queue<std::string> >(true, tokens);
 }

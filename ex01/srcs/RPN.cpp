@@ -10,21 +10,21 @@ int	atoi(const std::string &s) {
 int	isOperator(char c) {
 	return (c == '+' || c == '-' || c == '*' || c == '/');
 }
-
 Result<int>	calculate(int front, int back, char ope) {
+	int ret = 0;
 	if (ope == '+')
-		return (front + back);
+		ret = front + back;
 	else if (ope == '-')
-		return (front - back);
+		ret = front - back;
 	else if (ope == '*')
-		return (front * back);
+		ret = front * back;
 	else if (ope == '/')
 	{
 		if (back == 0)
-			return false;
-		return (front / back);
+			return Result<int>(false, ERROR);
+		ret = front / back;
 	}
-	return 0;
+	return Result<int>(true, ret);
 }
 
 Result<std::queue<std::string> >	tokenize(const std::string& str) {
@@ -72,7 +72,10 @@ Result<int> evaluateRPN(std::queue<std::string> tokens) {
 			stack.pop();
 			Result<int> result = calculate(front, back, token[0]);
 			if (!result.isOk())
+			{
+				std::cerr << "DIVISION BY 0" << std::endl;
 				return Result<int>(false, ERROR);
+			}
 			stack.push(result.getResult());
 		}
 		tokens.pop();

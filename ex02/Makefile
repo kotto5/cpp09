@@ -1,4 +1,4 @@
-NAME	=	RPN
+NAME	=	PmergeMe
 
 # a variable SRCS contain any files in srcs with *.cpp directory
 SRCS	=	$(wildcard srcs/*.cpp)

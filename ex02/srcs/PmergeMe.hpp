@@ -41,7 +41,13 @@ public:
 	static std::vector<unsigned int> pMerge2(std::vector<unsigned int> v);
 	static unsigned int jacobsthal(unsigned int t);
 	static int pow(int x, unsigned int a);
-	static std::vector<std::pair<unsigned int, unsigned int> >::iterator getInsertItr(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int insert, unsigned int end);
+	// static std::vector<unsigned int>::iterator getInsertItr(std::vector<unsigned int>&mainChain, unsigned int insert, unsigned int end);
+	static std::vector<std::pair<unsigned int, unsigned int> >::iterator	getInsertItr(std::vector<std::pair<unsigned int, unsigned int> >	&pairs, unsigned int insert, unsigned int end);
+	static std::vector<std::pair<unsigned int, unsigned int> >::iterator			getInsertItrRec
+	(
+		unsigned int insert,
+		std::vector<std::pair<unsigned int, unsigned int> >::iterator begin,
+		std::vector<std::pair<unsigned int, unsigned int> >::iterator end);
 };
 
 #endif

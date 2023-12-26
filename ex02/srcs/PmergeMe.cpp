@@ -19,13 +19,41 @@ unsigned int PmergeMe::jacobsthal(unsigned int t)
     return (pow(2, t + 1) + pow(-1, t)) / 3;
 }
 
-// 入れるところの前のitrを返す
-std::vector<std::pair<unsigned int, unsigned int> >::iterator PmergeMe::getInsertItr(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int insert, unsigned int end)
+std::vector<std::pair<unsigned int, unsigned int> >::iterator	PmergeMe::getInsertItrRec
+	(
+		unsigned int insert,
+		std::vector<std::pair<unsigned int, unsigned int> >::iterator begin,
+		std::vector<std::pair<unsigned int, unsigned int> >::iterator end)
 {
-    (void)pairs;
-    (void)insert;
-    (void)end;
-    return pairs.begin();
+	const unsigned int middleIndex = (end - begin) / 2;
+	if (middleIndex == 0)
+	{
+		return (*begin).first > insert
+			? begin
+			: end;
+	}
+	std::vector<std::pair<unsigned int, unsigned int> >::iterator	middle = begin + middleIndex;
+	if ((*middle).first > insert)
+		return getInsertItrRec(insert, begin, middle);
+	else
+		return getInsertItrRec(insert, middle, end);
+}
+
+// 入れるところの前のitrを返す
+std::vector<std::pair<unsigned int, unsigned int> >::iterator	PmergeMe::getInsertItr
+	(std::vector<std::pair<unsigned int, unsigned int> >	&pairs, unsigned int insert, unsigned int end)
+{
+	std::vector<std::pair<unsigned int, unsigned int> >::iterator	beginItr = pairs.begin();
+	const unsigned int middle = end / 2;
+	std::vector<std::pair<unsigned int, unsigned int> >::iterator	middleItr = beginItr + middle;
+	if ((*middleItr).first > insert)
+	{
+		return getInsertItrRec(insert, beginItr, middleItr);
+	}
+	else
+	{
+		return getInsertItrRec(insert, beginItr, beginItr + end);
+	}
 }
 
 std::vector<unsigned int> PmergeMe::pMerge1(std::vector<unsigned int> v) {
@@ -80,27 +108,44 @@ std::vector<unsigned int> PmergeMe::pMerge1(std::vector<unsigned int> v) {
         }
     }
     // 最小ペアのsecond は主鎖の仲間入り
-    sortedMainChain.insert(sortedMainChain.begin(), sortedPairs[0].second);
+    // sortedMainChain.insert(sortedMainChain.begin(), sortedPairs[0].second);
+	sortedPairs.insert(sortedPairs.begin(), std::make_pair(sortedPairs[0].second, 0U));
 
     // insertion sort
-    for (unsigned int i = 1 ;; i++)
+    for (unsigned int k = 1 ;; k++)
     {
-        const unsigned int t = jacobsthal(i);
+        const unsigned int t = jacobsthal(k);
         std::cout << "t: " << t << std::endl;
         // TODO あまりのやつ size より大きい時かな?
         (void)let;
-        const unsigned int start = t > sortedPairs.size() ? sortedPairs.size() : t;
-        const unsigned int end = jacobsthal(i - 1);
-        for (unsigned int j = start; j > end; j--)
+        unsigned int start = t > sortedPairs.size() ? sortedPairs.size() : t;
+        unsigned int end = jacobsthal(k - 1);
+		// 今まで足した分のindex がずれてるのでずらす
+		start += end;
+        if (k > 1)
+		    end += end;
+		// value で itr は取れないみたいなので一旦index
+        for (unsigned int i = start; i > end; i--)
         {
-            const unsigned int   insert = sortedPairs[j].second;
-            std::vector<std::pair<unsigned int, unsigned int> >::iterator   insertItr = getInsertItr(sortedPairs, insert, start);
-            sortedPairs.insert(insertItr, std::make_pair(insert, 0));
+            const unsigned int						insert = sortedPairs[i].second;
+			if (insert == 0)
+				continue;
+			std::vector<std::pair<unsigned int, unsigned int> >::iterator	insertItr
+			 = getInsertItr(sortedPairs, insert, start);
+            // mainChain.insert(insertItr, insert);
+			sortedPairs.insert(insertItr, std::make_pair(insert, 0U));
+			if (end > insertItr - sortedPairs.begin())
+				end++;
         }
-        if (t > sortedPairs.size())
+        if (sortedPairs.size() == v.size())
             break;
     }
-    return v;
+
+    // pair のvec を first だけ抽出して返す
+    std::vector<unsigned int> ret;
+    for (std::vector<std::pair<unsigned int, unsigned int> >::iterator itr = sortedPairs.begin(); itr != sortedPairs.end(); itr++)
+        ret.push_back((*itr).first);
+    return ret;
 }
 
 std::vector<unsigned int> PmergeMe::pMerge2(std::vector<unsigned int> v) {

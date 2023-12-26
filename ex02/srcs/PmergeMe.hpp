@@ -37,8 +37,11 @@ private:
 	PmergeMe(const PmergeMe &other);
 	const PmergeMe	&operator=(const PmergeMe& other) const;
 public:
-	static std::vector<int> pMerge1(std::vector<int> v);
-	static std::vector<int> pMerge2(std::vector<int> v);
+	static std::vector<unsigned int> pMerge1(std::vector<unsigned int> v);
+	static std::vector<unsigned int> pMerge2(std::vector<unsigned int> v);
+	static unsigned int jacobsthal(unsigned int t);
+	static int pow(int x, unsigned int a);
+	static std::vector<std::pair<unsigned int, unsigned int> >::iterator getInsertItr(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int insert, unsigned int end);
 };
 
 #endif

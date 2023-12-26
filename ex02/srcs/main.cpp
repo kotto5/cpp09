@@ -9,29 +9,29 @@ bool is_number(std::string str) {
   return true;
 }
 
-unsigned int stoui(std::string str) {
-    unsigned int result;
+t_ui stoui(std::string str) {
+    t_ui result;
     std::stringstream(str) >> result;
     return result;
 }
 
-Result<std::vector<unsigned int> > validateArgs(char **argv) {
-    std::vector<unsigned int> v;
-    for (unsigned int i = 0; argv[i]; i++) {
+Result<std::vector<t_ui> > validateArgs(char **argv) {
+    std::vector<t_ui> v;
+    for (t_ui i = 0; argv[i]; i++) {
         if (is_number(argv[i]) == false)
-            return Result<std::vector<unsigned int> >(false);
+            return Result<std::vector<t_ui> >(false);
         else {
-            const unsigned int num = stoui(argv[i]);
+            const t_ui num = stoui(argv[i]);
             if (num <= 0)
-                return Result<std::vector<unsigned int> >(false);
+                return Result<std::vector<t_ui> >(false);
             else
                 v.push_back(num);
         }
     }
-    return Result<std::vector<unsigned int> >(true, v);
+    return Result<std::vector<t_ui> >(true, v);
 }
 
-void    putVector(std::vector<unsigned int> v, std::string msg) {
+void    putVector(std::vector<t_ui> v, std::string msg) {
     std::cout << msg << std::endl;
     for (size_t i = 0; i < v.size(); i++) {
         std::cout << v[i] << " ";
@@ -53,19 +53,19 @@ int main(int argc, char **argv)
     if (argc == 1) {
         return 1;
     }
-    Result<std::vector<unsigned int> > result = validateArgs(argv + 1);
+    Result<std::vector<t_ui> > result = validateArgs(argv + 1);
     if (result.isOk() == false) {
         return 2;
     }
-    std::vector<unsigned int> v = result.getResult();
+    std::vector<t_ui> v = result.getResult();
     putVector(v, "Before");
 
     const long              ta1 = getTimeInUsec();
-    const std::vector<unsigned int>  sorted1 = PmergeMe::pMerge1(v);
+    const std::vector<t_ui>  sorted1 = PmergeMe::pMerge1(v);
     const long              ta2 = getTimeInUsec();
 
     const long              tb1 = getTimeInUsec();
-    const std::vector<unsigned int>  sorted2 = PmergeMe::pMerge2(v);
+    const std::vector<t_ui>  sorted2 = PmergeMe::pMerge2(v);
     const long              tb2 = getTimeInUsec();
 
     if (sorted1 != sorted2) {

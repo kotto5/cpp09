@@ -11,6 +11,8 @@
 #define RED "\033[31m"
 #define RESET "\033[0m"
 
+typedef unsigned int t_ui;
+
 template <typename T>
 class Result
 {
@@ -37,17 +39,17 @@ private:
 	PmergeMe(const PmergeMe &other);
 	const PmergeMe	&operator=(const PmergeMe& other) const;
 public:
-	static std::vector<unsigned int> pMerge1(std::vector<unsigned int> v);
-	static std::vector<unsigned int> pMerge2(std::vector<unsigned int> v);
-	static unsigned int jacobsthal(unsigned int t);
-	static int pow(int x, unsigned int a);
-	// static std::vector<unsigned int>::iterator getInsertItr(std::vector<unsigned int>&mainChain, unsigned int insert, unsigned int end);
-	static std::vector<std::pair<unsigned int, unsigned int> >::iterator	getInsertItr(std::vector<std::pair<unsigned int, unsigned int> >	&pairs, unsigned int insert, unsigned int end);
-	static std::vector<std::pair<unsigned int, unsigned int> >::iterator			getInsertItrRec
+	static std::vector<t_ui> pMerge1(std::vector<t_ui> v);
+	static std::vector<t_ui> pMerge2(std::vector<t_ui> v);
+	static t_ui jacobsthal(t_ui t);
+	static int pow(int x, t_ui a);
+	// static std::vector<t_ui>::iterator getInsertItr(std::vector<t_ui>&mainChain, t_ui insert, t_ui end);
+	static std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItr(std::vector<std::pair<t_ui, t_ui> >	&pairs, t_ui insert, t_ui end);
+	static std::vector<std::pair<t_ui, t_ui> >::iterator			getInsertItrRec
 	(
-		unsigned int insert,
-		std::vector<std::pair<unsigned int, unsigned int> >::iterator begin,
-		std::vector<std::pair<unsigned int, unsigned int> >::iterator end);
+		t_ui insert,
+		std::vector<std::pair<t_ui, t_ui> >::iterator begin,
+		std::vector<std::pair<t_ui, t_ui> >::iterator end);
 };
 
 #endif

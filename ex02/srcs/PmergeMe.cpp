@@ -28,9 +28,12 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	PmergeMe::getInsertItrRec
 	const t_ui middleIndex = (end - begin) / 2;
 	if (middleIndex == 0)
 	{
-		return (*begin).first > insert
-			? begin
-			: end;
+        if (insert < (*begin).first)
+            return begin;
+        else if (insert < (*end).first)
+            return end;
+        // else
+        //     return end + 1;
 	}
 	std::vector<std::pair<t_ui, t_ui> >::iterator	middle = begin + middleIndex;
 	if ((*middle).first > insert)
@@ -128,11 +131,16 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
         for (t_ui i = start; i > end; i--)
         {
             const t_ui						insert = sortedPairs[i].second;
-			if (insert == 0)
+			if (insert == 0) // 挿入されたものはスキップ まあそもそもここを触ることがおかしい そんなことないか
 				continue;
+            std::vector<std::pair<t_ui, t_ui> >::iterator begin = sortedPairs.begin();
+			// std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
+			//  = getInsertItr(sortedPairs, insert, start); //i - 1?
+
 			std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
-			 = getInsertItr(sortedPairs, insert, start);
-            // mainChain.insert(insertItr, insert);
+			 = getInsertItrRec(insert, begin, begin + i - 1);
+
+            sortedPairs[i].second = 0;
 			sortedPairs.insert(insertItr, std::make_pair(insert, 0U));
 			if (end > insertItr - sortedPairs.begin())
 				end++;

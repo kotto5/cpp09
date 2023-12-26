@@ -48,8 +48,7 @@ unsigned long getTimeInUsec() {
     return ret;
 }
 
-int main(int argc, char **argv)
-{
+int execute(int argc, char **argv) {
     if (argc == 1) {
         return 1;
     }
@@ -79,6 +78,15 @@ int main(int argc, char **argv)
         putVector(sorted1, "After");
     std::cout << GREEN << "pMerge1(vector): " << ta2 - ta1 << " u_sec" << RESET << std::endl;
     std::cout << GREEN << "pMerge2(list)  : " << tb2 - tb1 << " u_sec" << RESET << std::endl;
-
     return 0;
+}
+
+int testGetInsertItr();
+
+int main(int argc, char **argv)
+{
+    (void)argc;
+    (void)argv;
+    execute(argc, argv);
+    // testGetInsertItr();    
 }

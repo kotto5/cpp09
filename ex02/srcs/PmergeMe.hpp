@@ -44,8 +44,7 @@ public:
 	static t_ui jacobsthal(t_ui t);
 	static int pow(int x, t_ui a);
 	// static std::vector<t_ui>::iterator getInsertItr(std::vector<t_ui>&mainChain, t_ui insert, t_ui end);
-	static std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItr(std::vector<std::pair<t_ui, t_ui> >	&pairs, t_ui insert, t_ui end);
-	static std::vector<std::pair<t_ui, t_ui> >::iterator			getInsertItrRec
+	static std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRec
 	(
 		t_ui insert,
 		std::vector<std::pair<t_ui, t_ui> >::iterator begin,

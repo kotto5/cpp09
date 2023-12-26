@@ -31,7 +31,7 @@ int	tester(std::string str, bool success, int expect = 0) {
 	std::cerr << RESET << std::endl;
 
 	Result<int> result = RPN::evaluate(str);
-	if (result.isOk() != success || (!success && result.getResult() != ERROR))
+	if (result.isOk() != success || (success == true && result.getResult() != expect))
 		putResult(false, result);
 	else
 		putResult(true, result);
@@ -50,6 +50,9 @@ int	main(int argc, char **argv) {
 	tester("1 1 1 - /", false);
 	tester("1 1 1 - *", true, 0);
 	tester("10 1 1 - *", false, 0);
+	tester("5 6 - 1 3 * 2 + 5 2 - * - 4 5 * * 8 /", true, 0);
+	tester("3 4 2 * 1 5 - / +", true, 1);
+	tester("1 5 -", true, -4);
 	if (argc == 1)
 	{
 		std::cout << "ERROR" << std::endl;

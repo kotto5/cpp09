@@ -42,23 +42,6 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	PmergeMe::getInsertItrRec
 		return getInsertItrRec(insert, middle, end);
 }
 
-// 入れるところの前のitrを返す
-std::vector<std::pair<t_ui, t_ui> >::iterator	PmergeMe::getInsertItr
-	(std::vector<std::pair<t_ui, t_ui> >	&pairs, t_ui insert, t_ui end)
-{
-	std::vector<std::pair<t_ui, t_ui> >::iterator	beginItr = pairs.begin();
-	const t_ui middle = end / 2;
-	std::vector<std::pair<t_ui, t_ui> >::iterator	middleItr = beginItr + middle;
-	if ((*middleItr).first > insert)
-	{
-		return getInsertItrRec(insert, beginItr, middleItr);
-	}
-	else
-	{
-		return getInsertItrRec(insert, beginItr, beginItr + end);
-	}
-}
-
 std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
     if (v.size() == 2)
     {

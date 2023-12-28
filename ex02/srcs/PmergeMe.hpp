@@ -11,6 +11,8 @@
 #define RED "\033[31m"
 #define RESET "\033[0m"
 
+#define NONE 0
+
 typedef unsigned int t_ui;
 
 template <typename T>

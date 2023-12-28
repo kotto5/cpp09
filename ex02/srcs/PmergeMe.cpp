@@ -66,14 +66,18 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
     }
     else if (v.size() == 1)
         return v;
+    
+    const size_t origin_size = v.size();
+    t_ui let = NONE;
+    if (v.size() % 2 == 1) {
+        let = v[v.size() - 1];
+        v.pop_back();
+    }
+
     // make pair
     std::vector<std::pair<t_ui, t_ui> > pairs;
     for (size_t i = 0; i < v.size(); i += 2) {
         pairs.push_back(std::make_pair(v[i], v[i + 1]));
-    }
-    t_ui let = 0;
-    if (v.size() % 2 == 1) {
-        let = v[v.size() - 1];
     }
 
     // pair sort, first is bigger
@@ -106,12 +110,14 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
     }
     // 最小ペアのsecond は主鎖の仲間入り
     // sortedMainChain.insert(sortedMainChain.begin(), sortedPairs[0].second);
-	sortedPairs.insert(sortedPairs.begin(), std::make_pair(sortedPairs[0].second, 0U));
+	sortedPairs.insert(sortedPairs.begin(), std::make_pair(sortedPairs[0].second, NONE));
     sortedPairs[1].second = 0;
 
     // insertion sort
-    for (t_ui k = 2, size = v.size() ; sortedPairs.size() != size; k++)
+    for (t_ui k = 2, size = origin_size ; sortedPairs.size() != size; k++)
     {
+        const std::vector<std::pair<t_ui, t_ui> >::iterator begin = sortedPairs.begin();
+
         const t_ui t = jacobsthal(k);
         std::cout << "t: " << t << std::endl;
         // TODO あまりのやつ size より大きい時かな?
@@ -121,11 +127,16 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
 		// 今まで足した分のindex がずれてるのでずらすのが +end
         end = end * 2 - 1;
         if (end >= sortedPairs.size())
-        {
             throw std::runtime_error("End の設定方法お菓子い");
-        }
         t_ui endValue = sortedPairs[end].first;
 		// value で itr は取れないみたいなので一旦index
+        if (start == sortedPairs.size() - 1 && let != NONE)
+        {
+			std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
+			 = getInsertItrRec(let, begin, sortedPairs.end() - 1);
+			sortedPairs.insert(insertItr, std::make_pair(let, NONE));
+            start++;
+        }
         for (t_ui i = start; sortedPairs[i].first != endValue;)
         {
             const t_ui						insert = sortedPairs[i].second;
@@ -134,17 +145,14 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
                 i--;
                 continue;
             }
-            std::vector<std::pair<t_ui, t_ui> >::iterator begin = sortedPairs.begin();
 			// std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
 			//  = getInsertItr(sortedPairs, insert, start); //i - 1?
 
 			std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
 			 = getInsertItrRec(insert, begin, begin + i);
 
-            sortedPairs[i].second = 0; //保険　必要はないと思う
-			sortedPairs.insert(insertItr, std::make_pair(insert, 0U));
-			if (end > insertItr - sortedPairs.begin())
-				end++; // いらない
+            sortedPairs[i].second = NONE; //保険　必要はないと思う
+			sortedPairs.insert(insertItr, std::make_pair(insert, NONE));
         }
     }
 

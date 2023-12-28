@@ -1,5 +1,14 @@
 #include "PmergeMe.hpp"
 
+bool    isSorted2(std::vector<t_ui> v) {
+    for (t_ui i = 0; i < v.size() - 1; i++)
+    {
+        if (v[i] > v[i + 1])
+            return false;
+    }
+    return true;
+}
+
 bool is_number(std::string str) {
   for (size_t i = 0; i < str.length(); i++) {
     if (!isdigit(str[i])) {
@@ -32,11 +41,12 @@ Result<std::vector<t_ui> > validateArgs(char **argv) {
 }
 
 void    putVector(std::vector<t_ui> v, std::string msg) {
+    std::cout << GREEN;
     std::cout << msg << std::endl;
     for (size_t i = 0; i < v.size(); i++) {
         std::cout << v[i] << " ";
     }
-    std::cout << std::endl;    
+    std::cout << RESET << std::endl;
 }
 
 unsigned long getTimeInUsec() {
@@ -81,12 +91,26 @@ int execute(int argc, char **argv) {
     return 0;
 }
 
-int testGetInsertItr();
+int runTest() {
+    std::vector<t_ui> v;
+    for (t_ui i = 1; i < 10; i++) {
+        v.push_back(i);
+        const std::vector<t_ui>  sorted1 = PmergeMe::pMerge1(v);
+        if (isSorted2(sorted1) == false)
+        {
+            putVector(v, "ERROR! ");
+        }
+        else
+            putVector(v, "SUCCESS! ");
+    }
+    return 0;
+}
 
 int main(int argc, char **argv)
 {
     (void)argc;
     (void)argv;
+    // runTest();
     execute(argc, argv);
     // testGetInsertItr();    
 }

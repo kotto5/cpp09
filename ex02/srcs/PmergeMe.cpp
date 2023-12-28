@@ -26,11 +26,12 @@ t_ui PmergeMe::jacobsthal(t_ui t)
     return (pow(2, t + 1) + pow(-1, t)) / 3;
 }
 
-std::vector<std::pair<t_ui, t_ui> >::iterator	PmergeMe::getInsertItrRec
+// std::vector<std::pair<t_ui, t_ui> >::iterator	PmergeMe::getInsertItrRec
+std::vector<std::pair<t_ui, t_ui> >::iterator	&getInsertItrRec
 	(
 		t_ui insert,
-		std::vector<std::pair<t_ui, t_ui> >::iterator begin,
-		std::vector<std::pair<t_ui, t_ui> >::iterator end)
+		std::vector<std::pair<t_ui, t_ui> >::iterator &begin,
+		std::vector<std::pair<t_ui, t_ui> >::iterator &end)
 {
 	const t_ui middleIndex = (end - begin) / 2;
 	if (middleIndex == 0)
@@ -50,6 +51,32 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	PmergeMe::getInsertItrRec
 		return getInsertItrRec(insert, begin, middle);
 	else
 		return getInsertItrRec(insert, middle, end);
+}
+
+std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRecLet
+	(
+		t_ui insert,
+		std::vector<std::pair<t_ui, t_ui> >::iterator begin,
+		std::vector<std::pair<t_ui, t_ui> >::iterator end)
+{
+	const t_ui middleIndex = (end - begin) / 2;
+	if (middleIndex == 0)
+	{
+        if (insert < (*begin).first)
+            return begin;
+        else if (insert < (*end).first)
+            return end;
+        else
+        {
+            debug("LET だから最後許すよ!!!");
+            return end + 1;
+        }
+	}
+	std::vector<std::pair<t_ui, t_ui> >::iterator	middle = begin + middleIndex;
+	if ((*middle).first > insert)
+		return getInsertItrRecLet(insert, begin, middle);
+	else
+		return getInsertItrRecLet(insert, middle, end);
 }
 
 std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
@@ -116,7 +143,7 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
     // insertion sort
     for (t_ui k = 2, size = origin_size ; sortedPairs.size() != size; k++)
     {
-        const std::vector<std::pair<t_ui, t_ui> >::iterator begin = sortedPairs.begin();
+        std::vector<std::pair<t_ui, t_ui> >::iterator begin = sortedPairs.begin();
 
         const t_ui t = jacobsthal(k);
         std::cout << "t: " << t << std::endl;
@@ -132,8 +159,10 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
 		// value で itr は取れないみたいなので一旦index
         if (start == sortedPairs.size() - 1 && let != NONE)
         {
+            debug("LET!");
+            std::vector<std::pair<t_ui, t_ui> >::iterator tmp = sortedPairs.end() - 1;
 			std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
-			 = getInsertItrRec(let, begin, sortedPairs.end() - 1);
+			 = getInsertItrRecLet(let, begin, tmp);
 			sortedPairs.insert(insertItr, std::make_pair(let, NONE));
             start++;
         }
@@ -147,9 +176,10 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
             }
 			// std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
 			//  = getInsertItr(sortedPairs, insert, start); //i - 1?
-
+            std::vector<std::pair<t_ui, t_ui> >::iterator tmp = begin + i;
+            debug("NOT LET!");
 			std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
-			 = getInsertItrRec(insert, begin, begin + i);
+			 = getInsertItrRec(insert, begin, tmp);
 
             sortedPairs[i].second = NONE; //保険　必要はないと思う
 			sortedPairs.insert(insertItr, std::make_pair(insert, NONE));

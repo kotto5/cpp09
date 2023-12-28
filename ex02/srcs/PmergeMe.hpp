@@ -45,12 +45,11 @@ public:
 	static std::vector<t_ui> pMerge2(std::vector<t_ui> v);
 	static t_ui jacobsthal(t_ui t);
 	static int pow(int x, t_ui a);
-	// static std::vector<t_ui>::iterator getInsertItr(std::vector<t_ui>&mainChain, t_ui insert, t_ui end);
-	static std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRec
-	(
-		t_ui insert,
-		std::vector<std::pair<t_ui, t_ui> >::iterator begin,
-		std::vector<std::pair<t_ui, t_ui> >::iterator end);
+	// static std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRec
+	// (
+	// 	t_ui insert,
+	// 	std::vector<std::pair<t_ui, t_ui> >::iterator begin,
+	// 	std::vector<std::pair<t_ui, t_ui> >::iterator end);
 };
 
 #endif

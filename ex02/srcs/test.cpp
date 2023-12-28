@@ -20,40 +20,40 @@ bool    isSorted(std::vector<t_ui> v) {
     return true;
 }
 
-int testGetInsertItr() {
-    t_ui max = 100;
-    std::vector<std::pair<t_ui, t_ui> > v;
-    for (t_ui i = 0; i < max; i += 8)
-        v.push_back(std::make_pair(i, 0U));
-    for (t_ui i = 1; i < max - 8; i += 4)
-    {
-        std::vector<std::pair<t_ui, t_ui> >::iterator itr;
-        itr = PmergeMe::getInsertItrRec(i, v.begin(), v.end());
-        std::cout << "itr: " << (*itr).first << "insert: " << i << "  ";
-        if ((*itr).first == i + 1)
-        {
-            std::cout << GREEN << "OK!" << RESET << std::endl;
-        }
-        else
-        {
-            std::cout << RED << "NO!" << RESET << std::endl;
-            // std::cout << "KO itr: " << (*(itr - 1)).first << std::endl;
-        }
-        v.insert(itr, std::make_pair(i, 0));
-        // if ((*itr).first = i + 1 && *itr).first = i + 1)
-    }
+// int testGetInsertItr() {
+//     t_ui max = 100;
+//     std::vector<std::pair<t_ui, t_ui> > v;
+//     for (t_ui i = 0; i < max; i += 8)
+//         v.push_back(std::make_pair(i, 0U));
+//     for (t_ui i = 1; i < max - 8; i += 4)
+//     {
+//         std::vector<std::pair<t_ui, t_ui> >::iterator itr;
+//         itr = PmergeMe::getInsertItrRec(i, v.begin(), v.end());
+//         std::cout << "itr: " << (*itr).first << "insert: " << i << "  ";
+//         if ((*itr).first == i + 1)
+//         {
+//             std::cout << GREEN << "OK!" << RESET << std::endl;
+//         }
+//         else
+//         {
+//             std::cout << RED << "NO!" << RESET << std::endl;
+//             // std::cout << "KO itr: " << (*(itr - 1)).first << std::endl;
+//         }
+//         v.insert(itr, std::make_pair(i, 0));
+//         // if ((*itr).first = i + 1 && *itr).first = i + 1)
+//     }
 
-    std::vector<t_ui> ret;
-    for (std::vector<std::pair<t_ui, t_ui> >::iterator itr = v.begin(); itr != v.end(); itr++)
-        ret.push_back((*itr).first);
-    if (isSorted(ret))
-        std::cout << "SUCESS!!" << std::endl;
-    else
-        std::cout << "KO!!" << std::endl;
+//     std::vector<t_ui> ret;
+//     for (std::vector<std::pair<t_ui, t_ui> >::iterator itr = v.begin(); itr != v.end(); itr++)
+//         ret.push_back((*itr).first);
+//     if (isSorted(ret))
+//         std::cout << "SUCESS!!" << std::endl;
+//     else
+//         std::cout << "KO!!" << std::endl;
 
-    putVector2(ret, "FINISH ! ");
-    return 0;
-}
+//     putVector2(ret, "FINISH ! ");
+//     return 0;
+// }
 
 // int main() {
 //     std::vector<int> v;

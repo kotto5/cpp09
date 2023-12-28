@@ -1,4 +1,5 @@
 #include "PmergeMe.hpp"
+#include "Array.hpp"
 
 bool is_number(std::string str) {
   for (size_t i = 0; i < str.length(); i++) {
@@ -83,10 +84,41 @@ int execute(int argc, char **argv) {
 
 int testGetInsertItr();
 
+template < typename Container >
+void print( Container const & c )
+{
+    for ( std::size_t i = 0 ; i != c.size() ; ++i )
+    {
+        std::cout << c[i] ;
+    }
+}
+
 int main(int argc, char **argv)
 {
     (void)argc;
     (void)argv;
-    execute(argc, argv);
-    // testGetInsertItr();    
+    // execute(argc, argv);
+    // testGetInsertItr();
+    Array<int, 5> array;
+    array[0] = 0;
+    array[1] = 1;
+    array[2] = 2;
+    array[3] = 3;
+    array[4] = 4;
+
+    for (Array<int, 5>::iterator itr = array.begin(),
+        end = array.end(); itr < end; itr++) {
+        std::cout << itr[0] << std::endl;
+    }
+
+    std::vector<int> v;
+    v.push_back(0);
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
+    v.push_back(4);
+    for (std::vector<int>::iterator itr = v.begin(),
+    end = v.end(); itr < end; itr++) {
+        std::cout << itr[0] << std::endl;
+    }
 }

@@ -1,5 +1,10 @@
 #include "PmergeMe.hpp"
 
+int debug(std::string msg) {
+    std::cout << msg << std::endl;
+    return 0;
+}
+
 int PmergeMe::pow(int x, t_ui a) {
     if (a == 0)
         return 1;
@@ -16,6 +21,8 @@ int PmergeMe::pow(int x, t_ui a) {
 
 t_ui PmergeMe::jacobsthal(t_ui t)
 {
+    if (t == 0)
+        return 0;
     return (pow(2, t + 1) + pow(-1, t)) / 3;
 }
 
@@ -32,8 +39,11 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	PmergeMe::getInsertItrRec
             return begin;
         else if (insert < (*end).first)
             return end;
-        // else
-        //     return end + 1;
+        else
+        {
+            std::cerr << "ERROR begin: " << (*begin).first << " end: " << (*end).first << " insert: " << insert << std::endl;
+            throw std::runtime_error("ERROR: logic getInsertItrRec");
+        }
 	}
 	std::vector<std::pair<t_ui, t_ui> >::iterator	middle = begin + middleIndex;
 	if ((*middle).first > insert)
@@ -43,6 +53,7 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	PmergeMe::getInsertItrRec
 }
 
 std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
+    debug("PmergeMe1!");
     if (v.size() == 2)
     {
         if (v[0] > v[1])
@@ -96,40 +107,45 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
     // 最小ペアのsecond は主鎖の仲間入り
     // sortedMainChain.insert(sortedMainChain.begin(), sortedPairs[0].second);
 	sortedPairs.insert(sortedPairs.begin(), std::make_pair(sortedPairs[0].second, 0U));
+    sortedPairs[1].second = 0;
 
     // insertion sort
-    for (t_ui k = 1 ;; k++)
+    for (t_ui k = 2, size = v.size() ; sortedPairs.size() != size; k++)
     {
         const t_ui t = jacobsthal(k);
         std::cout << "t: " << t << std::endl;
         // TODO あまりのやつ size より大きい時かな?
         (void)let;
-        t_ui start = t > sortedPairs.size() ? sortedPairs.size() : t;
-        t_ui end = jacobsthal(k - 1);
-		// 今まで足した分のindex がずれてるのでずらす
-		start += end;
-        if (k > 1)
-		    end += end;
+        t_ui end = jacobsthal(k - 1); // plus 1 は first commit 分
+        t_ui start = t + end >= sortedPairs.size()? sortedPairs.size() - 1: t + end;
+		// 今まで足した分のindex がずれてるのでずらすのが +end
+        end = end * 2 - 1;
+        if (end >= sortedPairs.size())
+        {
+            throw std::runtime_error("End の設定方法お菓子い");
+        }
+        t_ui endValue = sortedPairs[end].first;
 		// value で itr は取れないみたいなので一旦index
-        for (t_ui i = start; i > end; i--)
+        for (t_ui i = start; sortedPairs[i].first != endValue;)
         {
             const t_ui						insert = sortedPairs[i].second;
-			if (insert == 0) // 挿入されたものはスキップ まあそもそもここを触ることがおかしい そんなことないか
-				continue;
+			if (insert == 0) // 挿入されたものはスキップ
+			{
+                i--;
+                continue;
+            }
             std::vector<std::pair<t_ui, t_ui> >::iterator begin = sortedPairs.begin();
 			// std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
 			//  = getInsertItr(sortedPairs, insert, start); //i - 1?
 
 			std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr
-			 = getInsertItrRec(insert, begin, begin + i - 1);
+			 = getInsertItrRec(insert, begin, begin + i);
 
-            sortedPairs[i].second = 0;
+            sortedPairs[i].second = 0; //保険　必要はないと思う
 			sortedPairs.insert(insertItr, std::make_pair(insert, 0U));
 			if (end > insertItr - sortedPairs.begin())
-				end++;
+				end++; // いらない
         }
-        if (sortedPairs.size() == v.size())
-            break;
     }
 
     // pair のvec を first だけ抽出して返す

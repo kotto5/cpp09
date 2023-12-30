@@ -43,7 +43,7 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRec
         else
         {
             std::cerr << "ERROR begin: " << (*begin).first << " end: " << (*end).first << " insert: " << insert << std::endl;
-            throw std::runtime_error("ERROR: logic getInsertItrRec");
+            throw std::logic_error("ERROR: logic getInsertItrRec");
         }
 	}
 	std::vector<std::pair<t_ui, t_ui> >::iterator	middle = begin + middleIndex;

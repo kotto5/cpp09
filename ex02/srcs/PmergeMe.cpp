@@ -97,12 +97,12 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
     if (vec.size() % 2 == 1) {
         let = vec[vec.size() - 1];
         std::cout << "TEST !!!!! size : " << vec.size() << std::endl;
-        std::vector<t_ui>::iterator it = vec.begin() + vec.size() - 1;
-        std::cout << "TEST !!!!!" << *it << std::endl;
+        // std::vector<t_ui>::iterator it = vec.begin() + vec.size() - 1;
+        // v.erase(v.begin() + v.size() - 1);
+        // (void)it;
+        // std::cout << "TEST !!!!!" << *it << std::endl;
         vec.pop_back();
         std::cout << "TEST !!!!! size : " << vec.size() << std::endl;
-        (void)it;
-        // v.erase(v.begin() + v.size() - 1);
     }
 
     // make pair

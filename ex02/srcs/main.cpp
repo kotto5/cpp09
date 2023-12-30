@@ -98,9 +98,9 @@ int runTest() {
     std::vector<t_ui> v;
     for (t_ui i = 1; i < 18; i++) {
         v.push_back(i);
-        if (i == 11 || i == 12 || i == 13 || i == 14)
+        // if (i == 12 || i == 13)
+        if (i == 12)
             continue;
-
         const std::vector<t_ui>  sorted1 = PmergeMe::pMerge1(v);
         if (isSorted2(sorted1) == false)
         {
@@ -121,27 +121,4 @@ int main(int argc, char **argv)
         runTest();
     else
         execute(argc, argv);
-
-    // testGetInsertItr();    
 }
-
-    // std::vector<int> v;
-    // v.push_back(1);
-    // v.push_back(1);
-    // v.push_back(20);
-    // v.push_back(20);
-    // v.push_back(1);
-    // v.push_back(1);
-
-    // for (size_t i = 0; i < v.size(); i++) {
-    //     std::cout << v[i] << std::endl;
-    // }
-
-    // // std::vector<int>::iterator itr;
-    // std::remove(v.begin(), v.end(), 20);
-    // std::cout << std::endl << std::endl;
-
-
-    // for (size_t i = 0; i < v.size(); i++) {
-    //     std::cout << v[i] << std::endl;
-    // }

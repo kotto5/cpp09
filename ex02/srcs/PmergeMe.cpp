@@ -47,7 +47,8 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRec
         }
 	}
 	std::vector<std::pair<t_ui, t_ui> >::iterator	middle = begin + middleIndex;
-	if ((*middle).first > insert)
+    const t_ui middle_first = (*middle).first > insert;
+	if (middle_first > insert)
 		return getInsertItrRec(insert, begin, middle);
 	else
 		return getInsertItrRec(insert, middle, end);
@@ -83,22 +84,25 @@ t_ui    jacobsthal_index(t_ui k) {
     if (k == 0)
         return 0;
     else
-        return PmergeMe::jacobsthal(k - 1) + (k) - 1;
+        return PmergeMe::jacobsthal(k - 1) + PmergeMe::jacobsthal(k) - 1;
 }
 
-std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
+std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
     debug("PmergeMe1!");
-    if (v.size() == 1)
-        return v;
+    if (vec.size() == 1)
+        return vec;
 
-    const t_ui origin_size = v.size();
+    const t_ui origin_size = vec.size();
     t_ui let = NONE;
-    if (v.size() % 2 == 1) {
-        let = v[v.size() - 1];
-        // v.pop_back();
-        std::vector<t_ui>::iterator it = v.begin() + v.size() - 1;
+    if (vec.size() % 2 == 1) {
+        let = vec[vec.size() - 1];
+        std::cout << "TEST !!!!! size : " << vec.size() << std::endl;
+        std::vector<t_ui>::iterator it = vec.begin() + vec.size() - 1;
         std::cout << "TEST !!!!!" << *it << std::endl;
-        v.erase(v.begin() + v.size() - 1);
+        vec.pop_back();
+        std::cout << "TEST !!!!! size : " << vec.size() << std::endl;
+        (void)it;
+        // v.erase(v.begin() + v.size() - 1);
     }
 
     // make pair
@@ -106,10 +110,10 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> v) {
     std::vector<std::pair<t_ui, t_ui> > pairs;
     std::vector<t_ui> mainChain;
 
-    for (t_ui i = 0; i < v.size(); i += 2) {
-        std::pair<t_ui, t_ui> pair = v[i] > v[i + 1]
-        ? std::make_pair(v[i], v[i + 1])
-        : std::make_pair(v[i + 1], v[i]);
+    for (t_ui i = 0; i < vec.size(); i += 2) {
+        std::pair<t_ui, t_ui> pair = vec[i] > vec[i + 1]
+        ? std::make_pair(vec[i], vec[i + 1])
+        : std::make_pair(vec[i + 1], vec[i]);
         mainChain.push_back(pair.first);
         pairs.push_back(pair);
     }

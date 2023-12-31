@@ -26,8 +26,7 @@ t_ui PmergeMe::jacobsthal(t_ui t)
     return (pow(2, t + 1) + pow(-1, t)) / 3;
 }
 
-// std::vector<std::pair<t_ui, t_ui> >::iterator	PmergeMe::getInsertItrRec
-std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRec
+std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItr
 	(
 		t_ui insert,
 		std::vector<std::pair<t_ui, t_ui> >::iterator begin,
@@ -42,41 +41,14 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRec
             return end;
         else
         {
-            std::cerr << "ERROR begin: " << (*begin).first << " end: " << (*end).first << " insert: " << insert << std::endl;
-            throw std::logic_error("ERROR: logic getInsertItrRec");
-        }
-	}
-	std::vector<std::pair<t_ui, t_ui> >::iterator	middle = begin + middleIndex;
-    const t_ui middle_first = (*middle).first > insert;
-	if (middle_first > insert)
-		return getInsertItrRec(insert, begin, middle);
-	else
-		return getInsertItrRec(insert, middle, end);
-}
-
-std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRecLet
-	(
-		t_ui insert,
-		std::vector<std::pair<t_ui, t_ui> >::iterator begin,
-		std::vector<std::pair<t_ui, t_ui> >::iterator end)
-{
-	const t_ui middleIndex = (end - begin) / 2;
-	if (middleIndex == 0)
-	{
-        if (insert < (*begin).first)
-            return begin;
-        else if (insert < (*end).first)
-            return end;
-        else
-        {
             return end + 1;
         }
 	}
 	std::vector<std::pair<t_ui, t_ui> >::iterator	middle = begin + middleIndex;
 	if ((*middle).first > insert)
-		return getInsertItrRecLet(insert, begin, middle);
+		return getInsertItr(insert, begin, middle);
 	else
-		return getInsertItrRecLet(insert, middle, end);
+		return getInsertItr(insert, middle, end);
 }
 
 t_ui    jacobsthal_index(t_ui k) {
@@ -87,13 +59,14 @@ t_ui    jacobsthal_index(t_ui k) {
 }
 
 std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
-    if (vec.size() == 1)
+    const t_ui origin_size = vec.size();
+
+    if (origin_size == 1)
         return vec;
 
-    const t_ui origin_size = vec.size();
     t_ui let = NONE;
-    if (vec.size() % 2 == 1) {
-        let = vec[vec.size() - 1];
+    if (origin_size % 2 == 1) {
+        let = vec[origin_size - 1];
         vec.pop_back();
     }
 
@@ -101,7 +74,7 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
     // and make main chain
     std::vector<std::pair<t_ui, t_ui> > pairs;
     std::vector<t_ui> mainChain;
-    for (t_ui i = 0; i < vec.size(); i += 2) {
+    for (t_ui i = 0, vec_size = vec.size(); i < vec_size; i += 2) {
         std::pair<t_ui, t_ui> pair = vec[i] > vec[i + 1]
         ? std::make_pair(vec[i], vec[i + 1])
         : std::make_pair(vec[i + 1], vec[i]);
@@ -113,7 +86,7 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
     std::vector<t_ui> sortedMainChain = pMerge1(mainChain);
 
     // 主鎖を元にpairs をソート
-    for (t_ui i = 0; i < sortedMainChain.size(); i++) {
+    for (t_ui i = 0, chainSize = sortedMainChain.size(); i < chainSize; i++) {
         const t_ui findFirst = sortedMainChain[i];
         for (t_ui j = 0; j < pairs.size(); j++) {
             if (findFirst == pairs[j].first) {
@@ -135,7 +108,7 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
         if (start_index == pairs.size() - 1 && let != NONE)
         {
             std::vector<std::pair<t_ui, t_ui> >::iterator begin_itr = pairs.begin();
-            std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr = getInsertItrRecLet(let, begin_itr, begin_itr + start_index);
+            std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr = getInsertItr(let, begin_itr, begin_itr + start_index);
 			pairs.insert(insertItr, std::make_pair(let, NONE));
             start_index++;
         }
@@ -149,7 +122,16 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
                 continue;
             }
             std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr;
-            insertItr = getInsertItrRec(insert, begin_itr, begin_itr + i);
+
+            #ifdef DEBUG
+            std::cout << "FOO!" << std::endl;
+            insertItr = getInsertItr(insert, begin_itr, begin_itr + i);
+            if (insertItr == pairs.end())
+                throw std::logic_error("ERROR: logic getInsertItr");
+            #else
+            insertItr = getInsertItr(insert, begin_itr, begin_itr + i);
+            #endif
+
             pairs[i].second = NONE;
             if (end_index >= i) {
                 end_index++;

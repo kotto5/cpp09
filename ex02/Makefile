@@ -15,8 +15,11 @@ OBJS	=	$(addprefix $(OBJDIR)/, $(notdir $(SRCS:.cpp=.o)))
 DEPS	=	$(addprefix $(OBJDIR)/, $(notdir $(SRCS:.cpp=.d)))
 
 CXX		=	c++
-# CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g -MMD -MP
-CXXFLAGS	=	-Wall -Wextra -Werror -fsanitize=address -std=c++98 -g -MMD -MP
+CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g -MMD -MP
+
+# debug
+# CXXFLAGS	=	-Wall -Wextra -Werror -fsanitize=address -D DEBUG -std=c++98 -g -MMD -MP
+
 RM		=	rm -rf
 
 all:		$(NAME)

@@ -1,63 +1,61 @@
 #include "RPN.hpp"
 
-int	stod_util(const std::string &s) {
+int	RPN::atoi(const std::string &s) {
 	std::stringstream ss(s);
 	int	i = 0;
 	ss >> i;
 	return (i);
 }
 
-int	isoperator(char c) {
+int	RPN::isOperator(char c) {
 	return (c == '+' || c == '-' || c == '*' || c == '/');
 }
 
-int	calculate(int front, int back, char ope) {
+Result<int>	RPN::calculate(int front, int back, char ope) {
+	int ret = 0;
 	if (ope == '+')
-		return (front + back);
+		ret = front + back;
 	else if (ope == '-')
-		return (front - back);
+		ret = front - back;
 	else if (ope == '*')
-		return (front * back);
+		ret = front * back;
 	else if (ope == '/')
 	{
 		if (back == 0)
-			throw std::exception();
-		return (front / back);
+			return Result<int>(false, ERROR);
+		ret = front / back;
 	}
-	return 0;
+	return Result<int>(true, ret);
 }
 
-Result<std::queue<std::string> >	tokenize(const std::string& str) {
+Result<std::queue<std::string> >	RPN::tokenize(const std::string& str) {
     std::queue<std::string> tokens;
     std::string			    token;
     std::istringstream	    tokenStream(str);
-	int					    acceptableOperator = -1;
+	int						numOfNumberStackContain = 0;
 
     while (std::getline(tokenStream, token, ' ')) {
 		if (token.size() != 1)
 			return false;
-		else if (isoperator(token[0]))
+		else if (isOperator(token[0]))
 		{
-			if (acceptableOperator < 1)
+			if (numOfNumberStackContain < 2)
 				return false;
-			acceptableOperator--;
-			tokens.push(token);
+			else
+				numOfNumberStackContain--;
 		}
 		else if (std::isdigit(token[0]))
-		{
-			acceptableOperator++;
-			tokens.push(token);
-		}
+			numOfNumberStackContain++;
 		else
 			return Result<std::queue<std::string> >(false);
+		tokens.push(token);
     }
-	if (acceptableOperator != 0)
+	if (numOfNumberStackContain != 1)
 		return Result<std::queue<std::string> >(false);
 	return Result<std::queue<std::string> >(true, tokens);
 }
 
-// int evaluateRPN(const std::queue<std::string>& tokens) {
-Result<int> evaluateRPN(std::queue<std::string> tokens) {
+Result<int> RPN::evaluateRPN(std::queue<std::string> tokens) {
 	int				front;
 	int				back;
 
@@ -66,14 +64,20 @@ Result<int> evaluateRPN(std::queue<std::string> tokens) {
     while (tokens.size()) {
 		token = tokens.front();
 		if (std::isdigit(token[0]))
-			stack.push(stod_util(token));
-		else if (isoperator(token[0]))
+			stack.push(atoi(token));
+		else if (isOperator(token[0]))
 		{
 			back = stack.top();
 			stack.pop();
 			front = stack.top();
 			stack.pop();
-			stack.push(calculate(front, back, token[0]));
+			Result<int> result = calculate(front, back, token[0]);
+			if (!result.isOk())
+			{
+				std::cerr << "DIVISION BY 0" << std::endl;
+				return Result<int>(false, ERROR);
+			}
+			stack.push(result.getResult());
 		}
 		tokens.pop();
     }
@@ -85,7 +89,6 @@ Result<int> RPN::evaluate(std::string str) {
     if (!tokens.isOk())
     {
         std::cout << "TOKENIZE ERROR" << std::endl;
-        // return Result(false, ERROR);
         return Result<int>(false, ERROR);
     }
 

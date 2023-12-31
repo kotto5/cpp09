@@ -43,8 +43,8 @@ Result<std::vector<t_ui> > validateArgs(char **argv) {
     return Result<std::vector<t_ui> >(true, v);
 }
 
-void    putVector(std::vector<t_ui> v, std::string msg) {
-    std::cout << GREEN;
+void    putVector(std::vector<t_ui> v, std::string msg = "debug: ", std::string color = GREEN) {
+    std::cout << color;
     std::cout << msg << std::endl;
     for (size_t i = 0; i < v.size(); i++) {
         std::cout << v[i] << " ";
@@ -94,20 +94,31 @@ int execute(int argc, char **argv) {
     return 0;
 }
 
+int sortDebugger(std::vector<t_ui> v) {
+    const long              ta1 = getTimeInUsec();
+    const std::vector<t_ui>  sorted1 = PmergeMe::pMerge1(v);
+    const long              ta2 = getTimeInUsec();
+
+    std::cout << "============================" << std::endl;
+    std::cout << "size: " << v.size() << std::endl;
+    if (isSorted2(sorted1) == false)
+    {
+        putVector(v, "ERROR: ", RED);
+        std::exit(1);
+    }
+    else
+    {
+        std::cout << GREEN << "SUCCESS" << RESET << std::endl;
+    }
+    std::cout << GREEN << "pMerge1(vector) time : " << ta2 - ta1 << " u_sec" << RESET << std::endl;
+    return 0;
+}
+
 int runTest() {
     std::vector<t_ui> v;
-    for (t_ui i = 1; i < 18; i++) {
+    for (t_ui i = 1; i < 1500; i++) {
         v.push_back(i);
-        // if (i == 12 || i == 13)
-        if (i == 12)
-            continue;
-        const std::vector<t_ui>  sorted1 = PmergeMe::pMerge1(v);
-        if (isSorted2(sorted1) == false)
-        {
-            putVector(v, "ERROR! ");
-        }
-        else
-            putVector(v, "SUCCESS! ");
+        sortDebugger(v);
     }
     return 0;
 }

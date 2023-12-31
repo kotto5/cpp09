@@ -118,6 +118,7 @@ int runTest() {
     std::vector<t_ui> v;
     for (t_ui i = 1; i < 1500; i++) {
         v.push_back(i);
+        v.push_back(i);
         sortDebugger(v);
     }
     return 0;

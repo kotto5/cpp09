@@ -36,9 +36,9 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRec
 	const t_ui middleIndex = (end - begin) / 2;
 	if (middleIndex == 0)
 	{
-        if (insert < (*begin).first)
+        if (insert <= (*begin).first)
             return begin;
-        else if (insert < (*end).first)
+        else if (insert <= (*end).first)
             return end;
         else
         {
@@ -123,7 +123,6 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
     }
 
     // 最小ペアのsecond は主鎖の仲間入り
-    // sortedMainChain.insert(sortedMainChain.begin(), sortedPairs[0].second);
 	pairs.insert(pairs.begin(), std::make_pair(pairs[0].second, NONE));
     pairs[1].second = NONE;
 
@@ -132,8 +131,7 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
     {
         t_ui start_index = jacobsthal_index(k) >= pairs.size() ?
             pairs.size() - 1: jacobsthal_index(k);
-        const t_ui end_index = jacobsthal_index(k - 1);
-        const t_ui endValue = pairs[end_index].first;
+        t_ui end_index = jacobsthal_index(k - 1);
         if (start_index == pairs.size() - 1 && let != NONE)
         {
             std::vector<std::pair<t_ui, t_ui> >::iterator begin_itr = pairs.begin();
@@ -141,7 +139,7 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
 			pairs.insert(insertItr, std::make_pair(let, NONE));
             start_index++;
         }
-        for (t_ui i = start_index; pairs[i].first != endValue;)
+        for (t_ui i = start_index; i != end_index;)
         {
             std::vector<std::pair<t_ui, t_ui> >::iterator begin_itr = pairs.begin();
             const t_ui						insert = pairs[i].second;
@@ -153,6 +151,9 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
             std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr;
             insertItr = getInsertItrRec(insert, begin_itr, begin_itr + i);
             pairs[i].second = NONE;
+            if (end_index >= i) {
+                end_index++;
+            }
 			pairs.insert(insertItr, std::make_pair(insert, NONE));
         }
     }

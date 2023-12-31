@@ -1,8 +1,23 @@
 #include "PmergeMe.hpp"
 
+extern int g_count_operator;
+
 int debug(std::string msg) {
     std::cout << msg << std::endl;
     return 0;
+}
+
+bool    isSorted3(std::vector<t_ui> v) {
+    for (t_ui i = 0; i < v.size() - 1; i++)
+    {
+        if (v[i] > v[i + 1])
+        {
+            std::cout << "i: " << i << ": " << v[i];
+            std::cout << "i+1: " << i+1 << ": " << v[i+1] << std::endl;
+            return false;
+        }
+    }
+    return true;
 }
 
 int PmergeMe::pow(int x, t_ui a) {
@@ -36,19 +51,32 @@ std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItr
 	if (middleIndex == 0)
 	{
         if (insert <= (*begin).first)
+        {
+            g_count_operator++;
             return begin;
+        }
         else if (insert <= (*end).first)
+        {
+            g_count_operator +=2;
             return end;
+        }
         else
         {
+            g_count_operator +=2;
             return end + 1;
         }
 	}
 	std::vector<std::pair<t_ui, t_ui> >::iterator	middle = begin + middleIndex;
 	if ((*middle).first > insert)
-		return getInsertItr(insert, begin, middle);
+	{
+        g_count_operator++;
+        return getInsertItr(insert, begin, middle);
+    }
 	else
-		return getInsertItr(insert, middle, end);
+	{
+        g_count_operator++;
+        return getInsertItr(insert, middle, end);
+    }
 }
 
 t_ui    jacobsthal_index(t_ui k) {
@@ -84,15 +112,21 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
 
     // main chain sort
     std::vector<t_ui> sortedMainChain = pMerge1(mainChain);
+    if (isSorted3(sortedMainChain) == false)
+        throw std::logic_error("sorterr");
 
     // 主鎖を元にpairs をソート
     for (t_ui i = 0, chainSize = sortedMainChain.size(); i < chainSize; i++) {
         const t_ui findFirst = sortedMainChain[i];
-        for (t_ui j = 0; j < pairs.size(); j++) {
-            if (findFirst == pairs[j].first) {
-                std::swap(pairs[i], pairs[j]);
-            }
-        }
+        t_ui    j = i;
+        while (findFirst != pairs[j].first)
+            ++j;
+        std::swap(pairs[i], pairs[j]);
+    }
+
+    for (t_ui i = 0, chainSize = sortedMainChain.size(); i < chainSize; i++) {
+        if (sortedMainChain[i] != pairs[i].first)
+            throw std::logic_error("swap");
     }
 
     // 最小ペアのsecond は主鎖の仲間入り
@@ -105,6 +139,10 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
         t_ui start_index = jacobsthal_index(k) >= pairs.size() ?
             pairs.size() - 1: jacobsthal_index(k);
         t_ui end_index = jacobsthal_index(k - 1);
+
+        if (end_index >= pairs.size())
+            throw std::logic_error("end_index (jacobstal)");
+
         if (start_index == pairs.size() - 1 && let != NONE)
         {
             std::vector<std::pair<t_ui, t_ui> >::iterator begin_itr = pairs.begin();
@@ -123,14 +161,9 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
             }
             std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr;
 
-            #ifdef DEBUG
-            std::cout << "FOO!" << std::endl;
             insertItr = getInsertItr(insert, begin_itr, begin_itr + i);
             if (insertItr == pairs.end())
                 throw std::logic_error("ERROR: logic getInsertItr");
-            #else
-            insertItr = getInsertItr(insert, begin_itr, begin_itr + i);
-            #endif
 
             pairs[i].second = NONE;
             if (end_index >= i) {

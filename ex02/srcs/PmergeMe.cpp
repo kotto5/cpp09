@@ -150,10 +150,10 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
         const t_ui endValue = pairs[end_index].first;
 		// value で itr は取れないみたいなので一旦index
 
-        std::vector<std::pair<t_ui, t_ui> >::iterator begin_itr = pairs.begin();
 
         if (start_index == pairs.size() - 1 && let != NONE)
         {
+            std::vector<std::pair<t_ui, t_ui> >::iterator begin_itr = pairs.begin();
             debug("LET!");
             std::vector<std::pair<t_ui, t_ui> >::iterator	insertItr = getInsertItrRecLet(let, begin_itr, begin_itr + start_index);
 			pairs.insert(insertItr, std::make_pair(let, NONE));
@@ -161,6 +161,7 @@ std::vector<t_ui> PmergeMe::pMerge1(std::vector<t_ui> vec) {
         }
         for (t_ui i = start_index; pairs[i].first != endValue;)
         {
+            std::vector<std::pair<t_ui, t_ui> >::iterator begin_itr = pairs.begin();
             const t_ui						insert = pairs[i].second;
 			if (insert == 0) // 挿入されたものはスキップ
 			{

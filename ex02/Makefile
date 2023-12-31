@@ -1,4 +1,4 @@
-NAME	=	RPN
+NAME	=	PmergeMe
 
 # a variable SRCS contain any files in srcs with *.cpp directory
 SRCS	=	$(wildcard srcs/*.cpp)
@@ -16,6 +16,10 @@ DEPS	=	$(addprefix $(OBJDIR)/, $(notdir $(SRCS:.cpp=.d)))
 
 CXX		=	c++
 CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g -MMD -MP
+
+# debug
+# CXXFLAGS	=	-Wall -Wextra -Werror -fsanitize=address -D DEBUG -std=c++98 -g -MMD -MP
+
 RM		=	rm -rf
 
 all:		$(NAME)

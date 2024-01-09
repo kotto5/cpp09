@@ -51,7 +51,7 @@ Result<std::vector<t_ui> > validateArgs(char **argv) {
 
 void    putVector(std::vector<t_ui> v, std::string msg = "debug: ", std::string color = GREEN) {
     std::cout << color;
-    std::cout << msg << std::endl;
+    std::cout << msg << " ";
     for (size_t i = 0; i < v.size(); i++) {
         std::cout << v[i] << " ";
     }
@@ -67,6 +67,15 @@ unsigned long getTimeInUsec() {
     return ret;
 }
 
+void    putResult(std::string msg, long time, int count) {
+    (void)count;
+    std::cout << msg << " time: " << time << " u_sec ";
+    #ifdef DEBUG
+    std::cout << "compare : " << count << "times";
+    #endif
+    std::cout << std::endl;
+}
+
 int execute(int argc, char **argv) {
     if (argc == 1) {
         return 1;
@@ -76,38 +85,30 @@ int execute(int argc, char **argv) {
         return 2;
     }
     std::vector<t_ui> v = result.getResult();
-    // putVector(v, "Before");
+    putVector(v, "Before:");
 
     const long              ta1 = getTimeInUsec();
     g_count_operator = 0;
-    const std::vector<t_ui>  sorted1 = PmergeMe::pMerge1(v);
+    const std::vector<t_ui>  sorted1 = PmergeMe::pMerge(v);
+    int taCount = g_count_operator;
     const long              ta2 = getTimeInUsec();
 
     const long              tb1 = getTimeInUsec();
-    const std::vector<t_ui>  sorted2 = PmergeMe::pMerge2(v);
+    g_count_operator = 0;
+    std::deque<t_ui>        deQue(v.begin(), v.end());
+    const std::deque<t_ui>  sorted2que = PmergeMe::pMerge(deQue);
+    int tbCount = g_count_operator;
+    std::vector<t_ui>       sorted2(sorted2que.begin(), sorted2que.end());
     const long              tb2 = getTimeInUsec();
 
-    // if (sorted1 != sorted2) {
-    //     std::cout << "Error: pMerge1 and pMerge2 return different results" << std::endl;
-    //     std::cout << RED;
-    //     // putVector(sorted1, "pMerge1 After");
-    //     // putVector(sorted2, "pMerge2 After");
-    //     std::cout << RESET;
-    // }
     if (isSorted2(sorted1) == false)
-    {
-        putVector(v, "Before");
-        std::cout << RED << "❌ ! ";
-        // putVector(sorted1, "pMerge1 After");
-        exit(1);
-    }
+        throw std::runtime_error("sorted1 is not sorted");
+    else if (isSorted2(sorted2) == false)
+        throw std::runtime_error("sorted2 is not sorted");
     else
-    {
-        std::cout << GREEN << "⭕️ ! ";
-        // putVector(sorted1, "After");
-    }
-    std::cout << GREEN << "pMerge1(vector): " << ta2 - ta1 << " u_sec ; compair : " << g_count_operator << "times" << RESET << std::endl;
-    std::cout << GREEN << "pMerge2(list)  : " << tb2 - tb1 << " u_sec" << RESET << std::endl;
+        putVector(sorted1, "After: ");
+    putResult("vector", ta2 - ta1, taCount);
+    putResult("deque", tb2 - tb1, tbCount);
     return 0;
 }
 
@@ -115,7 +116,7 @@ int sortDebugger(std::vector<t_ui> v) {
     g_count_operator = 0;
 
     const long              ta1 = getTimeInUsec();
-    const std::vector<t_ui>  sorted1 = PmergeMe::pMerge1(v);
+    const std::vector<t_ui>  sorted1 = PmergeMe::pMerge(v);
     const long              ta2 = getTimeInUsec();
 
     std::cout << "============================" << std::endl;
@@ -153,4 +154,5 @@ int main(int argc, char **argv)
         runTest();
     else
         execute(argc, argv);
+    return 0;
 }

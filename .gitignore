@@ -10,4 +10,5 @@ RPN
 PmergeMe
 a.out
 number
-test.sh
+*/test.sh
+*/.devcontainer

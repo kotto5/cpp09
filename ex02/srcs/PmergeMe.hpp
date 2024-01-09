@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <sys/time.h>
+#include <deque>
 
 #define GREEN "\033[32m"
 #define RED "\033[31m"
@@ -41,15 +42,24 @@ private:
 	PmergeMe(const PmergeMe &other);
 	const PmergeMe	&operator=(const PmergeMe& other) const;
 public:
-	static std::vector<t_ui> pMerge1(std::vector<t_ui> v);
-	static std::vector<t_ui> pMerge2(std::vector<t_ui> v);
+	static bool    isSorted(std::vector<t_ui> v);
+	static bool    isSorted(std::deque<t_ui> deQue);
+	static std::vector<t_ui> pMerge(std::vector<t_ui> v);
+	static std::deque<t_ui> pMerge(std::deque<t_ui> deQue);
 	static t_ui jacobsthal(t_ui t);
 	static int pow(int x, t_ui a);
-	// static std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItrRec
-	// (
-	// 	t_ui insert,
-	// 	std::vector<std::pair<t_ui, t_ui> >::iterator begin,
-	// 	std::vector<std::pair<t_ui, t_ui> >::iterator end);
+	static int debug(std::string msg);
+
+	static std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItr
+	(
+		t_ui insert,
+		std::vector<std::pair<t_ui, t_ui> >::iterator begin,
+		std::vector<std::pair<t_ui, t_ui> >::iterator end);
+	static std::deque<std::pair<t_ui, t_ui> >::iterator	getInsertItr
+	(
+		t_ui insert,
+		std::deque<std::pair<t_ui, t_ui> >::iterator begin,
+		std::deque<std::pair<t_ui, t_ui> >::iterator end);
 };
 
 #endif

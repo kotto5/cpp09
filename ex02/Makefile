@@ -15,10 +15,7 @@ OBJS	=	$(addprefix $(OBJDIR)/, $(notdir $(SRCS:.cpp=.o)))
 DEPS	=	$(addprefix $(OBJDIR)/, $(notdir $(SRCS:.cpp=.d)))
 
 CXX		=	c++
-CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g -MMD -MP
-
-# debug
-# CXXFLAGS	=	-Wall -Wextra -Werror -fsanitize=address -D DEBUG -std=c++98 -g -MMD -MP
+CXXFLAGS	= -Wall -Wextra -Werror -g -fsanitize=address -std=c++11 -MMD -MP
 
 RM		=	rm -rf
 
@@ -31,6 +28,8 @@ objs/%.o:	srcs/%.cpp
 $(NAME):	$(OBJS)
 			$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
+debug:          CXXFLAGS += -DDEBUG
+debug:          re
 
 clean:
 			$(RM) $(OBJS) $(DEPS)
@@ -44,8 +43,3 @@ re:			fclean all
 
 
 -include	$(DEPS)
-
-
-# -MMD -MP: create dependency files
-# -c: compile and assemble, but do not link
-# -o: place output in file

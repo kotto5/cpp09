@@ -42,10 +42,13 @@ private:
 	PmergeMe(const PmergeMe &other);
 	const PmergeMe	&operator=(const PmergeMe& other) const;
 public:
+	static bool    isSorted(std::vector<t_ui> v);
+	static bool    isSorted(std::deque<t_ui> deQue);
 	static std::vector<t_ui> pMerge(std::vector<t_ui> v);
 	static std::deque<t_ui> pMerge(std::deque<t_ui> deQue);
 	static t_ui jacobsthal(t_ui t);
 	static int pow(int x, t_ui a);
+	static int debug(std::string msg);
 
 	static std::vector<std::pair<t_ui, t_ui> >::iterator	getInsertItr
 	(

@@ -147,8 +147,8 @@ int runTest() {
 
 int main(int argc, char **argv)
 {
-    (void)argc;
-    (void)argv;
+    if (argc == 1)
+        return 1;
     std::string str = argv[1];
     if (str == "test")
         runTest();

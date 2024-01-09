@@ -2,12 +2,12 @@
 
 extern int g_count_operator;
 
-int debug(std::string msg) {
+int PmergeMe::debug(std::string msg) {
     std::cout << msg << std::endl;
     return 0;
 }
 
-bool    isSorted3(std::vector<t_ui> v) {
+bool    PmergeMe::isSorted(std::vector<t_ui> v) {
     for (t_ui i = 0; i < v.size() - 1; i++)
     {
         if (v[i] > v[i + 1])
@@ -20,7 +20,7 @@ bool    isSorted3(std::vector<t_ui> v) {
     return true;
 }
 
-bool    isSorted4(std::deque<t_ui> deQue) {
+bool    PmergeMe::isSorted(std::deque<t_ui> deQue) {
     for (t_ui i = 0; i < deQue.size() - 1; i++)
     {
         if (deQue[i] > deQue[i + 1])
@@ -125,7 +125,7 @@ std::vector<t_ui> PmergeMe::pMerge(std::vector<t_ui> vec) {
 
     // main chain sort
     std::vector<t_ui> sortedMainChain = pMerge(mainChain);
-    if (isSorted3(sortedMainChain) == false)
+    if (isSorted(sortedMainChain) == false)
         throw std::logic_error("sorterr");
 
     // 主鎖を元にpairs をソート
@@ -256,7 +256,7 @@ std::deque<t_ui> PmergeMe::pMerge(std::deque<t_ui> deQue) {
 
     // main chain sort
     std::deque<t_ui> sortedMainChain = pMerge(mainChain);
-    if (isSorted4(sortedMainChain) == false)
+    if (isSorted(sortedMainChain) == false)
         throw std::logic_error("sorterr");
 
     // 主鎖を元にpairs をソート

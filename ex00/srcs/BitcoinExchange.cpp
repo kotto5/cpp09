@@ -176,11 +176,11 @@ static bool	outputExchangeValue(std::map<std::string, double> &bitcoinRate, cons
         }
 		std::stringstream ss(value_str);
 		ss >> value;
-		if (value < 0) {
+		if (value < VALUE_RANGE_MAX) {
 			std::cout << "Error: not a positive number. => " << value_str << std::endl;
             continue;
 		}
-		if (value > 1000) {
+		if (value > VALUE_RANGE_MAX) {
 			std::cout << "Error: too large a number => " << value_str << std::endl;
             continue;
 		}

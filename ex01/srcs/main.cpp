@@ -1,9 +1,5 @@
 #include "RPN.hpp"
 
-#define GREEN "\033[32m"
-#define RED "\033[31m"
-#define RESET "\033[0m"
-
 int	putResult(bool success, Result<int> result) {
 	if (success)
 	{

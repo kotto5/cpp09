@@ -3,6 +3,9 @@
 
 #include <string>
 
+#define VALUE_RANGE_MIN 0
+#define VALUE_RANGE_MAX 1000.0f
+
 class BitcoinExchange
 {
 private:

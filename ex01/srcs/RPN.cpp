@@ -14,11 +14,33 @@ int	RPN::isOperator(char c) {
 Result<int>	RPN::calculate(int front, int back, char ope) {
 	int ret = 0;
 	if (ope == '+')
+	{
+		if (front > 0 && back > 0 && front > INT_MAX - back)
+			return Result<int>(false, ERROR);
+		else if (front < 0 && back < 0 && front < INT_MIN - back)
+			return Result<int>(false, ERROR);
 		ret = front + back;
+	}
 	else if (ope == '-')
+	{
+		if (front > 0 && back < 0 && front > INT_MAX + back)
+			return Result<int>(false, ERROR);
+		else if (front < 0 && back > 0 && front < INT_MIN + back)
+			return Result<int>(false, ERROR);
 		ret = front - back;
+	}
 	else if (ope == '*')
+	{
+		if (front > 0 && back > 0 && front > INT_MAX / back)
+			return Result<int>(false, ERROR);
+		else if (front < 0 && back < 0 && front < INT_MAX / back)
+			return Result<int>(false, ERROR);
+		else if (front > 0 && back < 0 && front > INT_MIN / back)
+			return Result<int>(false, ERROR);
+		else if (front < 0 && back > 0 && front < INT_MIN / back)
+			return Result<int>(false, ERROR);
 		ret = front * back;
+	}
 	else if (ope == '/')
 	{
 		if (back == 0)
@@ -73,10 +95,7 @@ Result<int> RPN::evaluateRPN(std::queue<std::string> tokens) {
 			stack.pop();
 			Result<int> result = calculate(front, back, token[0]);
 			if (!result.isOk())
-			{
-				std::cerr << "DIVISION BY 0" << std::endl;
 				return Result<int>(false, ERROR);
-			}
 			stack.push(result.getResult());
 		}
 		tokens.pop();
@@ -88,14 +107,14 @@ Result<int> RPN::evaluate(std::string str) {
     Result<std::queue<std::string> > tokens = tokenize(str);
     if (!tokens.isOk())
     {
-        std::cout << "TOKENIZE ERROR" << std::endl;
+        std::cout << RED << "TOKENIZE ERROR" << RESET << std::endl;
         return Result<int>(false, ERROR);
     }
 
     Result<int> result = evaluateRPN(tokens.getResult());
     if (!result.isOk())
     {
-        std::cout << "EVALUATE ERROR" << std::endl;
+        std::cout << RED << "EVALUATE ERROR" << RESET << std::endl;
         return Result<int>(false, ERROR);
     }
     else

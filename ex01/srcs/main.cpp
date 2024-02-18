@@ -1,9 +1,5 @@
 #include "RPN.hpp"
 
-#define GREEN "\033[32m"
-#define RED "\033[31m"
-#define RESET "\033[0m"
-
 int	putResult(bool success, Result<int> result) {
 	if (success)
 	{
@@ -53,6 +49,7 @@ int	main(int argc, char **argv) {
 	tester("5 6 - 1 3 * 2 + 5 2 - * - 4 5 * * 8 /", true, 0);
 	tester("3 4 2 * 1 5 - / +", true, 1);
 	tester("1 5 -", true, -4);
+	tester("9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 *", false);
 	if (argc == 1)
 	{
 		std::cout << "ERROR" << std::endl;
